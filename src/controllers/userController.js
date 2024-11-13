@@ -51,16 +51,18 @@ const userController = {
         try {
             const { name, email, photo_url } = req.body;
             const updateData = { name, email, photo_url };
+            const user = await User.findById(req.user._id);
+
+            if (!user) {
+                return ResponseAPI.notFound(res, 'User not found');
+            }
 
             if (req.body.password) {
                 updateData.password = req.body.password;
             }
 
-            const user = await User.findByIdAndUpdate(
-                req.user._id,
-                updateData,
-                { new: true, runValidators: true }
-            ).select('-password');
+            Object.assign(user, updateData);
+            await user.save();
 
             ResponseAPI.success(res, user);
         } catch (error) {
