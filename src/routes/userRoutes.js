@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 const auth = require('../middleware/auth');
+const upload = require('../utils/multer');
 
 /**
  * @swagger
@@ -92,7 +93,7 @@ router.get('/profile', auth, userController.getProfile);
  *       - bearerAuth: []
  *     requestBody:
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -102,12 +103,12 @@ router.get('/profile', auth, userController.getProfile);
  *                 type: string
  *               password:
  *                 type: string
- *               photo_url:
- *                 type: string
+ *               photo:
+ *                 type: file
  *     responses:
  *       200:
  *         description: Profile updated successfully
  */
-router.put('/profile', auth, userController.updateProfile);
+router.put('/profile', auth, upload.single('photo'), userController.updateProfile);
 
 module.exports = router;

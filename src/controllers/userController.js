@@ -3,6 +3,10 @@ const User = require('../models/User');
 const ResponseAPI = require('../utils/response');
 const { jwtSecret, jwtExpiresIn } = require('../config/env');
 const bcrypt = require('bcryptjs');
+const axios = require('axios');
+const FormData = require('form-data');
+const fs = require('fs');
+const env = require('../config/env');
 
 
 const generateToken = (user) => {
@@ -55,35 +59,59 @@ const userController = {
         }
     },
 
+
+    
     async updateProfile(req, res, next) {
         try {
-            const { name, email, photo_url, password } = req.body;
+            const { name, email, password } = req.body;
+            
+            const user = await User.findById(req.user._id).select('-password');
+            
+            // Handle image upload if file exists
+            if (req.file) {
+                const formData = new FormData();
+                const imageFile = fs.createReadStream(req.file.path);
+                formData.append('image', imageFile);
 
-            const user = await User.findById(
-                req.user._id
-            ).select('-password');
-
-            if (req.body.password) {
+                const url = `${env.imgbbBaseUrl}/upload?key=${env.imgbbSecretKey}`
+    
+                const response = await axios.post(
+                    url,
+                    formData,
+                    {
+                        headers: {
+                            ...formData.getHeaders()
+                        }
+                    }
+                );
+    
+                if (response.data.success) {
+                    user.photo_url = response.data.data.url;
+                    // Clean up uploaded file
+                    fs.unlinkSync(req.file.path);
+                }
+            }
+    
+            // Update other fields if provided
+            if (password) {
                 user.password = password;
             }
-
-            if(name) {
-                user.name = name
+            if (name) {
+                user.name = name;
             }
-
-            if(email) {
-                user.email = email
+            if (email) {
+                user.email = email;
             }
-
-            if(photo_url) {
-                user.photo_url = photo_url
-            } 
-
-            await user.save()
-
+    
+            await user.save();
+            
             ResponseAPI.success(res, user);
         } catch (error) {
-            next(error)
+            // Clean up uploaded file if exists
+            if (req.file && fs.existsSync(req.file.path)) {
+                fs.unlinkSync(req.file.path);
+            }
+            next(error);
         }
     },
 
