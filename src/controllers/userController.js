@@ -2,13 +2,21 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const ResponseAPI = require('../utils/response');
 const { jwtSecret, jwtExpiresIn } = require('../config/env');
+const bcrypt = require('bcryptjs');
 
-const generateToken = (id) => {
-    return jwt.sign({ id }, jwtSecret, { expiresIn: jwtExpiresIn });
+
+const generateToken = (user) => {
+    const jwtPayload = {
+        id: user._id,
+        name: user.name,
+        email: user.email
+    }
+
+    return jwt.sign(jwtPayload, jwtSecret, { expiresIn: jwtExpiresIn });
 };
 
 const userController = {
-    async login(req, res) {
+    async login(req, res, next) {
         try {
             const { email, password } = req.body;
 
@@ -22,7 +30,7 @@ const userController = {
                 return ResponseAPI.error(res, 'Invalid email or password', 401);
             }
 
-            const token = generateToken(user._id);
+            const token = generateToken(user);
 
             ResponseAPI.success(res, {
                 token,
@@ -34,20 +42,20 @@ const userController = {
                 }
             });
         } catch (error) {
-            ResponseAPI.serverError(res, error);
+            next(error)
         }
     },
 
-    async getProfile(req, res) {
+    async getProfile(req, res, next) {
         try {
             const user = await User.findById(req.user._id).select('-password');
             ResponseAPI.success(res, user);
         } catch (error) {
-            ResponseAPI.serverError(res, error);
+            next(error)
         }
     },
 
-    async updateProfile(req, res) {
+    async updateProfile(req, res, next) {
         try {
             const { name, email, photo_url } = req.body;
             const updateData = { name, email, photo_url };
@@ -64,7 +72,28 @@ const userController = {
 
             ResponseAPI.success(res, user);
         } catch (error) {
-            ResponseAPI.serverError(res, error);
+            next(error)
+        }
+    },
+
+    async register(req, res, next) {
+        try {
+
+            const salt = bcrypt.genSaltSync()
+
+            const user = await User.create(
+                {
+                    name: req.body.name,
+                    password: req.body.password,
+                    password_salt: salt,
+                    photo_url: req.body.photo_url,
+                    email: req.body.email
+                }
+            );
+
+            ResponseAPI.success(res, user);
+        } catch (error) {
+            next(error)
         }
     }
 };

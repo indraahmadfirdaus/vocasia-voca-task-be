@@ -12,12 +12,18 @@ const auth = async (req, res, next) => {
         }
 
         const decoded = jwt.verify(token, jwtSecret);
+
+        if(!decoded) {
+            return ResponseAPI.unauthorized(res, 'Token is not valid');
+        }
+
         const user = await User.findById(decoded.id);
 
         if (!user) {
             return ResponseAPI.unauthorized(res, 'User not found');
         }
 
+        // context management
         req.user = user;
         next();
     } catch (error) {

@@ -1,6 +1,7 @@
-const errorHandler = (err, req, res, next) => {
-    console.error(err);
+const ResponseAPI = require("../utils/response");
 
+const errorHandler = (err, req, res, next) => {
+    console.log("ERRORS:", err.name);
     if (err.name === 'ValidationError') {
         return ResponseAPI.error(res, 'Validation Error', 400, err.errors);
     }

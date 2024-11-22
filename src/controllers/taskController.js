@@ -2,7 +2,8 @@ const Task = require('../models/Task');
 const ResponseAPI = require('../utils/response');
 
 const taskController = {
-    async createTask(req, res) {
+    async createTask(req, res, next) {
+        console.log("USER YANG LOGIN: ", req.user);
         try {
             const task = await Task.create({
                 ...req.body,
@@ -11,20 +12,20 @@ const taskController = {
 
             ResponseAPI.success(res, task, 'Task created successfully', 201);
         } catch (error) {
-            ResponseAPI.serverError(res, error);
+            next(error)
         }
     },
 
-    async getUserTasks(req, res) {
+    async getUserTasks(req, res, next) {
         try {
             const tasks = await Task.find({ userId: req.user._id });
             ResponseAPI.success(res, tasks);
         } catch (error) {
-            ResponseAPI.serverError(res, error);
+            next(error)
         }
     },
 
-    async updateTaskStatus(req, res) {
+    async updateTaskStatus(req, res, next) {
         try {
             const task = await Task.findOne({
                 _id: req.params.id,
@@ -40,11 +41,11 @@ const taskController = {
 
             ResponseAPI.success(res, task);
         } catch (error) {
-            ResponseAPI.serverError(res, error);
+            next(error)
         }
     },
 
-    async deleteTask(req, res) {
+    async deleteTask(req, res, next) {
         try {
             const task = await Task.findOneAndDelete({
                 _id: req.params.id,
@@ -57,7 +58,7 @@ const taskController = {
 
             ResponseAPI.success(res, null, 'Task deleted successfully');
         } catch (error) {
-            ResponseAPI.serverError(res, error);
+            next(error)
         }
     }
 };

@@ -44,6 +44,32 @@ router.post('/login', userController.login);
 
 /**
  * @swagger
+ * /api/users/register:
+ *   post:
+ *     tags: [Users]
+ *     summary: Register user profile
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               photo_url:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Registration success
+ */
+router.post('/register', userController.register);
+
+/**
+ * @swagger
  * /api/users/profile:
  *   get:
  *     tags: [Users]
