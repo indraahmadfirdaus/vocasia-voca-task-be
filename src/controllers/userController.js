@@ -57,18 +57,29 @@ const userController = {
 
     async updateProfile(req, res, next) {
         try {
-            const { name, email, photo_url } = req.body;
-            const updateData = { name, email, photo_url };
+            const { name, email, photo_url, password } = req.body;
+
+            const user = await User.findById(
+                req.user._id
+            ).select('-password');
 
             if (req.body.password) {
-                updateData.password = req.body.password;
+                user.password = password;
             }
 
-            const user = await User.findByIdAndUpdate(
-                req.user._id,
-                updateData,
-                { new: true, runValidators: true }
-            ).select('-password');
+            if(name) {
+                user.name = name
+            }
+
+            if(email) {
+                user.email = email
+            }
+
+            if(photo_url) {
+                user.photo_url = photo_url
+            } 
+
+            await user.save()
 
             ResponseAPI.success(res, user);
         } catch (error) {
