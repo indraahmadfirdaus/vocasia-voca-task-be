@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const taskController = require('../controllers/taskController');
 const auth = require('../middleware/auth');
+const authorizeRoles = require('../middleware/authorization');
+const ROLES = require('../constant/roles');
 
 /**
  * @swagger
@@ -26,7 +28,7 @@ const auth = require('../middleware/auth');
  *       201:
  *         description: Task created successfully
  */
-router.post('/', auth, taskController.createTask);
+router.post('/', auth, authorizeRoles([ROLES.CUSTOMER]), taskController.createTask);
 
 /**
  * @swagger

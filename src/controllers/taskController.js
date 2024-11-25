@@ -3,7 +3,6 @@ const ResponseAPI = require('../utils/response');
 
 const taskController = {
     async createTask(req, res, next) {
-        console.log("USER YANG LOGIN: ", req.user);
         try {
             const task = await Task.create({
                 ...req.body,

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const ROLES = require('../constant/roles');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -24,9 +25,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-    password_salt: {
+    role: {
         type: String,
-        default: 'salt'
+        enum : [ROLES.CUSTOMER, ROLES.ADMIN],
+        default: ROLES.CUSTOMER
     }
 }, {
     timestamps: true
@@ -34,7 +36,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, this.password_salt);
+    this.password = await bcrypt.hash(this.password, 12);
     next();
 });
 

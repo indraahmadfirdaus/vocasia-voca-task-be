@@ -9,13 +9,15 @@ const users = [
         name: 'John Doe',
         email: 'john@example.com',
         password: 'password123',
-        photo_url: 'https://example.com/john.jpg'
+        photo_url: 'https://example.com/john.jpg',
+        role: 'CUSTOMER'
     },
     {
         name: 'Jane Smith',
         email: 'jane@example.com',
         password: 'password123',
-        photo_url: 'https://example.com/jane.jpg'
+        photo_url: 'https://example.com/jane.jpg',
+        role: 'ADMIN'
     }
 ];
 

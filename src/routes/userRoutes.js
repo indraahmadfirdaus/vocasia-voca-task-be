@@ -4,6 +4,8 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const upload = require('../utils/multer');
+const authorizeRoles = require('../middleware/authorization');
+const ROLES = require('../constant/roles');
 
 /**
  * @swagger
@@ -81,7 +83,7 @@ router.post('/register', userController.register);
  *       200:
  *         description: User profile retrieved successfully
  */
-router.get('/profile', auth, userController.getProfile);
+router.get('/profile', auth, authorizeRoles([ROLES.ADMIN, ROLES.CUSTOMER]), userController.getProfile);
 
 /**
  * @swagger
