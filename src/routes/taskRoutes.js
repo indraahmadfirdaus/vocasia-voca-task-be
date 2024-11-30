@@ -28,6 +28,7 @@ const ROLES = require('../constant/roles');
  *       201:
  *         description: Task created successfully
  */
+// req.user => user yang login
 router.post('/', auth, authorizeRoles([ROLES.CUSTOMER]), taskController.createTask);
 
 /**

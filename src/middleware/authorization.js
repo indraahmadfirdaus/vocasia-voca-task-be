@@ -2,7 +2,6 @@ const ResponseAPI = require("../utils/response");
 
 
 const authorizeRoles = (allowedRoles) => {
-    console.log(allowedRoles);
 
     return (req, res, next) => {
         let authorized = false

@@ -7,6 +7,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 const fs = require('fs');
 const env = require('../config/env');
+const { imageUpload } = require('../utils/imageUtil');
 
 
 const generateToken = (user) => {
@@ -70,27 +71,9 @@ const userController = {
             
             // Handle image upload if file exists
             if (req.file) {
-                const formData = new FormData();
-                const imageFile = fs.createReadStream(req.file.path);
-                formData.append('image', imageFile);
+                const urlUploadResult = await imageUpload(req.file)
 
-                const url = `${env.imgbbBaseUrl}/upload?key=${env.imgbbSecretKey}`
-    
-                const response = await axios.post(
-                    url,
-                    formData,
-                    {
-                        headers: {
-                            ...formData.getHeaders()
-                        }
-                    }
-                );
-    
-                if (response.data.success) {
-                    user.photo_url = response.data.data.url;
-                    // Clean up uploaded file
-                    fs.unlinkSync(req.file.path);
-                }
+                user.photo_url = urlUploadResult
             }
     
             // Update other fields if provided
