@@ -19,6 +19,11 @@ app.use(morgan('dev'))
 app.use(cors());
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send('API Health Check, current time: ' + new Date().toLocaleString());
+});
+
+
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
