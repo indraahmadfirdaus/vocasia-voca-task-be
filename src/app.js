@@ -3,7 +3,7 @@ const cors = require('cors');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const connectDB = require('./config/database');
-const { port } = require('./config/env');
+const { port, beUrl } = require('./config/env');
 const errorHandler = require('./middleware/errorHandler');
 const userRoutes = require('./routes/userRoutes');
 const taskRoutes = require('./routes/taskRoutes');
@@ -34,7 +34,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://localhost:${port}`,
+                url: `${beUrl}:${port}`,
                 description: 'Development server'
             }
         ],
@@ -62,5 +62,5 @@ app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    console.log(`Swagger documentation available at http://localhost:${port}/docs`);
+    console.log(`Swagger documentation available at ${beUrl}:${port}/docs`);
 });

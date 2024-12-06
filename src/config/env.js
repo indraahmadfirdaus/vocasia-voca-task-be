@@ -7,5 +7,6 @@ module.exports = {
     jwtExpiresIn: process.env.JWT_EXPIRES_IN,
     cldCloudName: process.env.CLOUDINARY_CLOUD_NAME,
     cldApiKey: process.env.CLOUDINARY_API_KEY,
-    cldApiSecret: process.env.CLOUDINARY_API_SECRET
+    cldApiSecret: process.env.CLOUDINARY_API_SECRET,
+    beUrl: process.env.BE_URL,
 };
