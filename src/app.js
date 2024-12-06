@@ -23,6 +23,13 @@ app.get('/', (req, res) => {
     res.send('API Health Check, current time: ' + new Date().toLocaleString());
 });
 
+const getSwaggerServerUrl = () => {
+    if (process.env.NODE_ENV === 'production') {
+        return `${beUrl}`;
+    }
+    const swaggerServerUrl = `${beUrl}:${port}`;
+    return swaggerServerUrl;
+};
 
 const swaggerOptions = {
     definition: {
@@ -34,7 +41,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `${beUrl}:${port}`,
+                url: getSwaggerServerUrl(),
                 description: 'Development server'
             }
         ],
