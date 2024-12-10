@@ -9,4 +9,5 @@ module.exports = {
     cldApiKey: process.env.CLOUDINARY_API_KEY,
     cldApiSecret: process.env.CLOUDINARY_API_SECRET,
     beUrl: process.env.BE_URL,
+    swaggerServerUrl: process.env.SWAGGER_SERVER_URL,
 };

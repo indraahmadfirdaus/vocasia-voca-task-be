@@ -8,7 +8,7 @@ const errorHandler = require('./middleware/errorHandler');
 const userRoutes = require('./routes/userRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const morgan = require('morgan')
-
+const env = require('./config/env');
 
 const app = express();
 
@@ -24,11 +24,7 @@ app.get('/', (req, res) => {
 });
 
 const getSwaggerServerUrl = () => {
-    if (process.env.NODE_ENV === 'production') {
-        return `${beUrl}`;
-    }
-    const swaggerServerUrl = `${beUrl}:${port}`;
-    return swaggerServerUrl;
+    return env.swaggerServerUrl;
 };
 
 const swaggerOptions = {
