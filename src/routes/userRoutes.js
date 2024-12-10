@@ -63,8 +63,6 @@ router.post('/login', userController.login);
  *                 type: string
  *               password:
  *                 type: string
- *               photo_url:
- *                 type: string
  *     responses:
  *       201:
  *         description: Registration success

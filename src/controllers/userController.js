@@ -109,7 +109,6 @@ const userController = {
                     name: req.body.name,
                     password: req.body.password,
                     password_salt: salt,
-                    photo_url: req.body.photo_url,
                     email: req.body.email
                 }
             );

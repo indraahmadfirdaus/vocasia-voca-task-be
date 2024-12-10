@@ -65,5 +65,5 @@ app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    console.log(`Swagger documentation available at ${beUrl}:${port}/docs`);
+    console.log(`Swagger documentation available at ${getSwaggerServerUrl()}/docs`);
 });
